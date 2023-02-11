@@ -16,7 +16,7 @@ public class Main {
                         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 ) {
                     String string = in.readLine();
-                    out.println(new Gson().toJson(engine.search(string)));
+                    out.println(new Gson().toJson(engine.search(string.toLowerCase())));
                 }
             }
         } catch (IOException e) {

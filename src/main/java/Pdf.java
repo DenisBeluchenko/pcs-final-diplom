@@ -1,18 +1,22 @@
-import java.util.Map;
-
 public class Pdf {
+    private String string;
     private String pdfName;
     private int page;
-    private Map<String, Integer> pdf;
+    private int count;
 
-    public Map<String, Integer> getPdf() {
-        return pdf;
+    public int getCount() {
+        return count;
     }
 
-    public Pdf(String pdfName, int page, Map<String, Integer> pdf) {
+    public String getString() {
+        return string;
+    }
+
+    public Pdf(String string, String pdfName, int page, int count) {
+        this.string = string;
         this.pdfName = pdfName;
         this.page = page;
-        this.pdf = pdf;
+        this.count = count;
     }
 
     public String getPdfName() {

@@ -9,7 +9,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BooleanSearchEngine implements SearchEngine {
-    private List<Pdf> pdfList = new ArrayList<>();
+    private Map<String, List<PageEntry>> pageEntryMap = new HashMap<>();
+    private List<PageEntry> pageEntries;
 
     public BooleanSearchEngine(File pdfsDir) throws IOException {
         for (File file : pdfsDir.listFiles()) {
@@ -27,7 +28,15 @@ public class BooleanSearchEngine implements SearchEngine {
                     freqs.put(word, freqs.getOrDefault(word, 0) + 1);
                 }
                 for (String key : freqs.keySet()) {
-                    pdfList.add(new Pdf(key, file.getName(), pages, freqs.get(key)));
+                    if (pageEntryMap.containsKey(key)) {
+                        pageEntries = new ArrayList<>(pageEntryMap.get(key));
+                        pageEntries.add(new PageEntry(file.getName(), pages, freqs.get(key)));
+                        pageEntryMap.put(key, pageEntries);
+                    } else {
+                        pageEntries = new ArrayList<>();
+                        pageEntries.add(new PageEntry(file.getName(), pages, freqs.get(key)));
+                        pageEntryMap.put(key, pageEntries);
+                    }
                 }
             }
         }
@@ -35,8 +44,7 @@ public class BooleanSearchEngine implements SearchEngine {
 
     @Override
     public List<PageEntry> search(String word) {
-        List<PageEntry> pageEntryList = new ArrayList<>();
-        pdfList.stream().filter(x -> x.getString().equals(word)).forEach(x -> pageEntryList.add(new PageEntry(x.getPdfName(), x.getPage(), x.getCount())));
+        List<PageEntry> pageEntryList = pageEntryMap.get(word);
         return pageEntryList.stream().sorted(PageEntry::compareTo).collect(Collectors.toList());
     }
 }
